@@ -1,0 +1,44 @@
+* {
+    margin: 0;
+    padding: 0; 
+    box-sizing: border-box !important;
+}
+
+body{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f4f4f4;
+}
+.phone {
+   position: relative;
+   border: 1.5px solid #e6e6e6;
+   margin: 4% auto;
+   width: 400px;
+   height: 660px;
+   border-radius: 8px;
+   overflow: hidden;
+   background: #fff;
+}
+
+.header {
+    /* border: 1px solid blue; */
+    padding: 25px;
+    position: relative;
+    width: 100%;
+    background: linear-gradient(to right, #ff416c, #f3ac69);
+    color: #fff;
+    line-height: 28px;
+}
+
+.header p {
+    font-size: 14px;
+}
+
+.removeText {
+    font-weight: bolder;
+    cursor: pointer;
+    padding: 4px 15px;
+    border-radius: 30px;
+    border: 1px solid #fff;
+    text-align: center;
+    display: inline;
+}
