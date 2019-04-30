@@ -10,13 +10,14 @@ body{
 }
 .phone {
    position: relative;
-   border: 1.5px solid #e6e6e6;
+   /* border: 1.5px solid #e6e6e6; */
    margin: 4% auto;
    width: 400px;
    height: 660px;
    border-radius: 8px;
    overflow: hidden;
    background: #fff;
+   box-shadow: 0px 10px 50px rgba(0, 0, 0, 0.3);
 }
 
 .header {
