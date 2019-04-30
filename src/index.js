@@ -4,12 +4,14 @@ import {TodoList} from './todolist.js';
 
 let todoList = document.querySelector(".todo-list");
 let todoInput = document.querySelector(".todoInput");
-let removeButton = document.querySelector(".removeText");
+let removeButton = document.getElementById("remove");
+let selectAllButton = document.getElementById("selectAll");
 const List = new TodoList(renderHtml);
 
 window.addEventListener("load", function() {
     bindEvents();
 });
+
 
 function renderHtml(html){
     todoList.innerHTML = html;
@@ -36,5 +38,9 @@ function bindEvents() {
 
     removeButton.onclick = () => {
         List.clean();
+    }
+
+    selectAllButton.onclick = () => {
+        List.selectAll();
     }
 }

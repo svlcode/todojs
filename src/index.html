@@ -5,27 +5,31 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>ToDo App</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.2/css/bootstrap.min.css">
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.2/css/bootstrap.min.css"> -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" media="screen" href="style.css">
 </head>
 <body>
-    <div class="phone">
+    <div class="cont">
         <div class="header">
             <h2>ToDo App</h2>
             <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit.</p>
-            <div class="removeText">&#128465; Clean Checked Tasks</div>
+            <div id ="selectAll" class="toolButton"><span class="glyphicon glyphicon-ok"></span> Select All</div>
+            <div id ="remove" class="toolButton"><span class="glyphicon glyphicon-remove"></span> Delete</div>
+            
         </div>
 
         <div class="todo-body">
             <ul class="todo-list">
-                <li class="todo-item checked">
+                <!-- <li class="todo-item checked">
                     <input type="checkbox">First Item.
-                </li>
+                </li> -->
             </ul>
         </div>
-
-        <input type="tel" class="todoInput" placeholder="Enter a task here...">
+        <input type="tel" class="todoInput" placeholder="Enter a task here...">    
     </div>
+
+    
     <script src="./index.js" type="module"></script>
 </body>
 </html>

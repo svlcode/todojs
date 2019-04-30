@@ -11,6 +11,13 @@ export class TodoList {
         this.render();
     }
 
+    selectAll() {
+        this.todoMap.forEach((todo, key) => {
+            todo.checked = true;
+        });
+        this.render();
+    }
+
     addTodo(text = "Empty Task") {
         let id = Date.now() + "";
         this.todoMap.set(id, {
