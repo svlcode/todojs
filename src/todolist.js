@@ -30,7 +30,7 @@ export class TodoList {
         this.render();
     }
 
-    getTodoTemplate(todo, id) {
+    getTodoItemHtmlTemplate(todo, id) {
         return `<li 
                     class="todo-item ${(todo.checked ? "checked" : "")}" 
                     data-key="${id}"
@@ -44,16 +44,16 @@ export class TodoList {
                 </li>`;
     }
 
-    getHtmlForTodoCollection() {
-        let todoElements = [];
-        this.todoMap.forEach((todo, key) => {
-            todoElements.push(this.getTodoTemplate(todo, key));
-        });
-        return todoElements.join(" ");
+    render() {
+        let template = this.getTodoListHtmlTemplate();
+        this.renderHtml(template);
     }
 
-    render() {
-        let html = getHtmlForTodoCollection();
-        this.renderHtml(html);
+    getTodoListHtmlTemplate() {
+        let todoElements = [];
+        this.todoMap.forEach((todo, key) => {
+            todoElements.push(this.getTodoItemHtmlTemplate(todo, key));
+        });
+        return todoElements.join(" ");
     }
 }
