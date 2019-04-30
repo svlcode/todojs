@@ -1,7 +1,53 @@
 export class TodoList {
-    constructor(renderHtml){
+    constructor(renderHtml, showSelectionBtn, setSelectionBtnHtml, showDeleteBtn) {
         this.todoMap = new Map();
         this.renderHtml = renderHtml;
+        this.showSelectionBtn = showSelectionBtn;
+        this.setSelectionBtnHtml = setSelectionBtnHtml;
+        this.showDeleteBtn = showDeleteBtn;
+        this.updateBtnStates();
+    }
+
+    checkSelectDeselectBtn() {
+        if(this.todoMap.size === 0) {
+            this.showSelectionBtn(false);
+        }
+        else {
+            let allChecked = this.areAllTodosChecked();
+            if(allChecked) {
+                this.setSelectionBtnHtml('<span class="glyphicon glyphicon-ban-circle gi-2x"></span> Deselect All');
+            }
+            else {
+                this.setSelectionBtnHtml('<span class="glyphicon glyphicon-ok-circle gi-2x"></span> Select All');
+            }
+            this.showSelectionBtn(true);
+        }
+    }
+
+    checkDeleteBtn() {
+        if(this.todoMap.size === 0) {
+            this.showDeleteBtn(false);
+        }
+        else {
+            let anyTodoChecked = this.isAnyTodoChecked();
+            this.showDeleteBtn(anyTodoChecked);
+        }
+    }
+
+    isAnyTodoChecked() {
+        for (var todo of this.todoMap.values()) {
+            if(todo.checked)
+                return true;
+        }
+        return false;
+    }
+    areAllTodosChecked() {
+        let allChecked = true;
+        for (var todo of this.todoMap.values()) {
+            if(!todo.checked)
+                allChecked = false;
+        }
+        return allChecked;
     }
 
     markTodo(id, isChecked) {
@@ -11,10 +57,19 @@ export class TodoList {
         this.render();
     }
 
-    selectAll() {
-        this.todoMap.forEach((todo, key) => {
-            todo.checked = true;
-        });
+    selectDeselectAll() {
+        let allAreChecked = this.areAllTodosChecked();
+        if (allAreChecked) {
+            this.todoMap.forEach((todo, key) => {
+                todo.checked = false;
+            });
+        }
+        else {
+            this.todoMap.forEach((todo, key) => {
+                todo.checked = true;
+            });
+        }
+        
         this.render();
     }
 
@@ -51,7 +106,13 @@ export class TodoList {
                 </li>`;
     }
 
+    updateBtnStates() {
+        this.checkSelectDeselectBtn();
+        this.checkDeleteBtn();
+    }
+
     render() {
+        this.updateBtnStates();
         let template = this.getTodoListHtmlTemplate();
         this.renderHtml(template);
     }

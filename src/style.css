@@ -37,11 +37,23 @@ body{
 .toolButton {
     cursor: pointer;
     border: 1px solid #fff;
-    text-align: center;
-    display: inline;
     border-radius: 30px;
-    padding: 4px 15px;
+    border-left: 1px solid transparent;
+    text-align: left;
+    display: inline;
+    padding-left: 0px;
+    padding-right: 15px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    vertical-align: middle;
+    margin: 3px;
 }
+
+.toolButton span {
+    position: relative;
+    top: 8px;
+    right: 6px;
+  }
 
 .todo-body {
     position: relative;
@@ -99,3 +111,10 @@ input[type="checkbox"]{
 .todo-body:hover::-webkit-scrollbar-thumb {
     background-color: rgb(126, 121, 121);
   }
+
+
+
+.gi-2x{font-size: 2em; text-align: center;}
+.gi-3x{font-size: 3em;}
+.gi-4x{font-size: 4em;}
+.gi-5x{font-size: 5em;}
