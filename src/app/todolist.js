@@ -1,3 +1,5 @@
+import './node_modules/jquery/dist/jquery.js'
+
 export class TodoList {
     constructor(renderHtml, showSelectionBtn, setSelectionBtnHtml, showDeleteBtn) {
         this.todoMap = new Map();
@@ -6,7 +8,23 @@ export class TodoList {
         this.setSelectionBtnHtml = setSelectionBtnHtml;
         this.showDeleteBtn = showDeleteBtn;
         this.updateBtnStates();
+
+        let promise =$.get("http://localhost:3000/api/todos");
+        promise.then(
+            tasks => {
+                tasks.forEach((task) => {
+                    this.todoMap.set(task.id, {
+                        id : task.id,
+                        text: task.text,
+                        checked : task.checked
+                    });
+                });
+                this.render();
+            },
+            error => console.log('error...' + error)
+        );
     }
+
 
     checkSelectDeselectBtn() {
         if(this.todoMap.size === 0) {
