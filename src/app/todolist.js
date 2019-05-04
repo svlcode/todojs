@@ -1,6 +1,10 @@
 import './node_modules/jquery/dist/jquery.js'
+const todosUrl = "http://localhost:3000/api/todos/";
 
 export class TodoList {
+    
+    
+
     constructor(renderHtml, showSelectionBtn, setSelectionBtnHtml, showDeleteBtn) {
         this.todoMap = new Map();
         this.renderHtml = renderHtml;
@@ -9,7 +13,7 @@ export class TodoList {
         this.showDeleteBtn = showDeleteBtn;
         this.updateBtnStates();
 
-        let promise =$.get("http://localhost:3000/api/todos");
+        let promise =$.get(todosUrl);
         promise.then(
             tasks => {
                 tasks.forEach((task) => {
@@ -24,7 +28,6 @@ export class TodoList {
             error => console.log('error...' + error)
         );
     }
-
 
     checkSelectDeselectBtn() {
         if(this.todoMap.size === 0) {
@@ -69,46 +72,81 @@ export class TodoList {
     }
 
     markTodo(id, isChecked) {
+        this.checkUncheckTodo(id, !isChecked);
+    }
+
+    checkUncheckTodo(id, check, skipRender) {
         let task = this.todoMap.get(id);
-        task.checked = !isChecked;
-        this.todoMap.set(id, task);
-        this.render();
+        if(task) {
+            task.checked = check;
+            $.ajax({
+                type: 'PUT',
+                url: todosUrl + id,
+                contentType: 'application/json',
+                data: JSON.stringify(task),
+                success: (todo) => {
+                                    this.todoMap.set(id, task);
+                                    if(!skipRender)
+                                        this.render();
+                                }
+            });
+            
+        }
     }
 
     selectDeselectAll() {
         let allAreChecked = this.areAllTodosChecked();
         if (allAreChecked) {
             this.todoMap.forEach((todo, key) => {
-                todo.checked = false;
+                this.checkUncheckTodo(key, false, true);
             });
+            
         }
         else {
             this.todoMap.forEach((todo, key) => {
-                todo.checked = true;
+                this.checkUncheckTodo(key, true, true);
             });
         }
         
         this.render();
     }
 
-    addTodo(text = "Empty Task") {
-        let id = Date.now() + "";
-        this.todoMap.set(id, {
-            id : id,
-            text: text,
-            checked : false
-        });
-        this.render();
+    addTodo(description = "Empty Task") {
+        
+        let data = { id: "", text: description, checked: false };
+        
+        $.ajax({
+            type: 'POST',
+            url: todosUrl,
+            contentType: 'application/json',
+            data: JSON.stringify(data),
+            success: (todo) => {
+                                this.todoMap.set(todo.id, {
+                                    id : todo.id,
+                                    text: todo.text,
+                                    checked : todo.checked
+                                })
+                                this.render();
+                            }
+          });
     }
 
     clean(){
         this.todoMap.forEach((todo, key) => {
             if(todo.checked) {
                 this.todoMap.delete(key);
+                $.ajax({
+                    type: 'DELETE',
+                    url: todosUrl + key,
+                    success: (response) => {
+                        console.log(response);
+                    }
+                })
             }
         });
         this.render();
     }
+
 
     getTodoItemHtmlTemplate(todo, id) {
         return `<li 
