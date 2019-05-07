@@ -55,7 +55,7 @@ app.get('/api/todos/:id', (req, res) => {
 
 app.post("/api/todos", (req, res) => {
     const todo = {
-        id: (todos.length + 1).toString(),
+        id: uuidv4(),
         text: req.body.text,
         checked: req.body.checked
     };
