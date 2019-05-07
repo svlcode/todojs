@@ -1,23 +1,7 @@
 const express = require('express');
 const uuidv4 = require('uuid/v4');
-const Joi = require('@hapi/joi');
-
-const port = 3000;
-
-function validateTask(task) {
-    const schema = Joi.object().keys({ 
-        text: Joi.string().min(3).max(30).required(),
-        checked: Joi.boolean().required()
-    });
-
-    return Joi.validate(task, schema);
-}
-
-let todos = [
-    { id: uuidv4() + "", text : 'my first todo', checked: false },
-    { id: uuidv4() + "", text : 'my second todo', checked: false },
-    { id: uuidv4() + "", text : 'my third todo', checked: false }
-];
+const logger = require("./logger.js");
+const validator = require("./validator");
 
 const app = express();
 
@@ -29,6 +13,19 @@ app.use((req, res, next) => {
     res.header('Access-Control-Allow-Headers', 'Content-Type');
     next();
 });
+
+app.use(logger);
+app.use(validator);
+
+
+
+const port = 3000;
+
+let todos = [
+    { id: uuidv4() + "", text : 'my first todo', checked: false },
+    { id: uuidv4() + "", text : 'my second todo', checked: false },
+    { id: uuidv4() + "", text : 'my third todo', checked: false }
+];
 
 
 app.get('/', (req, res) => {
@@ -57,13 +54,6 @@ app.get('/api/todos/:id', (req, res) => {
 });
 
 app.post("/api/todos", (req, res) => {
-
-    const { error } = validateTask(req.body);
-    console.log(error);
-    if(error) {
-        // 400  - Bad Request
-        return res.status(400).send("'text' is required and should be minimum 3 characters.");
-    }
     const todo = {
         id: (todos.length + 1).toString(),
         text: req.body.text,
@@ -76,9 +66,6 @@ app.post("/api/todos", (req, res) => {
 });
 
 app.delete("/api/todos/:id", (req, res) => {
-    // console.log('deleting...');
-    // res.send('DELETE request to homepage');
-    console.log('Deleting todo: ' + req.params.id);
     let todo = todos.find((t) => t.id === req.params.id);
     if(!todo) {
         res.status(404).send(`The todo with the id '${req.params.id}' has not been found!`);
@@ -91,25 +78,15 @@ app.delete("/api/todos/:id", (req, res) => {
 });
 
 app.put("/api/todos/:id", (req, res) => {
-    console.log('Updating todo: ' + req.params.id);
     
     let todo = todos.find((t) => t.id === req.params.id);
     if(!todo) {
         res.status(404).send(`The todo with the id '${req.params.id}' has not been found!`);
     }
     else {
-        const { error } = validateTask(req.body);
-    
-        if(error) {
-            console.log(error);
-            // 400  - Bad Request
-            res.status(400).send("Bad Request.");
-        }
-        else {
-            todo.text = req.body.text;
-            todo.checked = req.body.checked;
-            res.send(todo);
-        }
+        todo.text = req.body.text;
+        todo.checked = req.body.checked;
+        res.send(todo);
     }
 });
 
