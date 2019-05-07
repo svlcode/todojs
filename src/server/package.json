@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
+    "@hapi/joi": "^15.0.1",
     "express": "^4.16.4",
     "uuid": "^3.3.2"
   },

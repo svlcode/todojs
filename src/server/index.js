@@ -1,6 +1,17 @@
-const port = 3000;
-
+const express = require('express');
 const uuidv4 = require('uuid/v4');
+const Joi = require('@hapi/joi');
+
+const postSchema = Joi.object().keys({ 
+    text: Joi.string().alphanum().min(3).max(30).required(),
+    checked: Joi.boolean().required()
+});
+
+const putSchema = postSchema.keys({
+    id: Joi.string().required()
+});
+
+const port = 3000;
 
 let todos = [
     { id: uuidv4() + "", text : 'my first todo', checked: false },
@@ -8,12 +19,10 @@ let todos = [
     { id: uuidv4() + "", text : 'my third todo', checked: false }
 ];
 
-
-const express = require('express');
 const app = express();
 
 app.use(express.json());
-// app.use(express.bodyParser());
+
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
@@ -49,6 +58,12 @@ app.get('/api/todos/:id', (req, res) => {
 
 app.post("/api/todos", (req, res) => {
 
+    const result = Joi.validate(req.body, postSchema);
+    console.log(result.error);
+    if(result.error) {
+        // 400  - Bad Request
+        return res.status(400).send("'text' is required and should be minimum 3 characters.");
+    }
     const todo = {
         id: (todos.length + 1).toString(),
         text: req.body.text,
@@ -76,7 +91,13 @@ app.delete("/api/todos/:id", (req, res) => {
 });
 
 app.put("/api/todos/:id", (req, res) => {
-    
+    const result = Joi.validate(req.body, putSchema);
+    console.log(result.error);
+    if(result.error) {
+        // 400  - Bad Request
+        return res.status(400).send("Bad Request.");
+    }
+
     console.log('Updating todo: ' + req.params.id);
     let todo = todos.find((t) => t.id === req.params.id);
     if(!todo) {

@@ -85,7 +85,7 @@ export class TodoList {
                 contentType: 'application/json',
                 data: JSON.stringify(task),
                 success: (todo) => {
-                                    this.todoMap.set(id, task);
+                                    this.todoMap.set(id, todo);
                                     if(!skipRender)
                                         this.render();
                                 }
@@ -112,14 +112,11 @@ export class TodoList {
     }
 
     addTodo(description = "Empty Task") {
-        
-        let data = { id: "", text: description, checked: false };
-        
         $.ajax({
             type: 'POST',
             url: todosUrl,
             contentType: 'application/json',
-            data: JSON.stringify(data),
+            data: JSON.stringify({ text: description, checked: false }),
             success: (todo) => {
                                 this.todoMap.set(todo.id, {
                                     id : todo.id,
