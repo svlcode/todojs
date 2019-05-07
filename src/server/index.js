@@ -10,7 +10,7 @@ function validateTask(task) {
         checked: Joi.boolean().required()
     });
 
-    return Joi.validate(task, postSchema);
+    return Joi.validate(task, schema);
 }
 
 let todos = [
@@ -58,9 +58,9 @@ app.get('/api/todos/:id', (req, res) => {
 
 app.post("/api/todos", (req, res) => {
 
-    const result = validateTask(req.body);
-    console.log(result.error);
-    if(result.error) {
+    const { error } = validateTask(req.body);
+    console.log(error);
+    if(error) {
         // 400  - Bad Request
         return res.status(400).send("'text' is required and should be minimum 3 characters.");
     }
@@ -98,10 +98,10 @@ app.put("/api/todos/:id", (req, res) => {
         res.status(404).send(`The todo with the id '${req.params.id}' has not been found!`);
     }
     else {
-        const result = validateTask(req.body);
+        const { error } = validateTask(req.body);
     
-        if(result.error) {
-            console.log(result.error);
+        if(error) {
+            console.log(error);
             // 400  - Bad Request
             res.status(400).send("Bad Request.");
         }
