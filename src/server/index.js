@@ -2,16 +2,16 @@ const express = require('express');
 const uuidv4 = require('uuid/v4');
 const Joi = require('@hapi/joi');
 
-const postSchema = Joi.object().keys({ 
-    text: Joi.string().min(3).max(30).required(),
-    checked: Joi.boolean().required()
-});
-
-const putSchema = postSchema.keys({
-    id: Joi.string().required()
-});
-
 const port = 3000;
+
+function validateTask(task) {
+    const schema = Joi.object().keys({ 
+        text: Joi.string().min(3).max(30).required(),
+        checked: Joi.boolean().required()
+    });
+
+    return Joi.validate(task, postSchema);
+}
 
 let todos = [
     { id: uuidv4() + "", text : 'my first todo', checked: false },
@@ -58,7 +58,7 @@ app.get('/api/todos/:id', (req, res) => {
 
 app.post("/api/todos", (req, res) => {
 
-    const result = Joi.validate(req.body, postSchema);
+    const result = validateTask(req.body);
     console.log(result.error);
     if(result.error) {
         // 400  - Bad Request
@@ -91,22 +91,25 @@ app.delete("/api/todos/:id", (req, res) => {
 });
 
 app.put("/api/todos/:id", (req, res) => {
-    const result = Joi.validate(req.body, putSchema);
-    console.log(result.error);
-    if(result.error) {
-        // 400  - Bad Request
-        return res.status(400).send("Bad Request.");
-    }
-
     console.log('Updating todo: ' + req.params.id);
+    
     let todo = todos.find((t) => t.id === req.params.id);
     if(!todo) {
         res.status(404).send(`The todo with the id '${req.params.id}' has not been found!`);
     }
     else {
-        todo.text = req.body.text;
-        todo.checked = req.body.checked;
-        res.send(todo);
+        const result = validateTask(req.body);
+    
+        if(result.error) {
+            console.log(result.error);
+            // 400  - Bad Request
+            res.status(400).send("Bad Request.");
+        }
+        else {
+            todo.text = req.body.text;
+            todo.checked = req.body.checked;
+            res.send(todo);
+        }
     }
 });
 

@@ -2,8 +2,6 @@ import './node_modules/jquery/dist/jquery.js'
 const todosUrl = "http://localhost:3000/api/todos/";
 
 export class TodoList {
-    
-    
 
     constructor(renderHtml, showSelectionBtn, setSelectionBtnHtml, showDeleteBtn) {
         this.todoMap = new Map();
@@ -79,19 +77,23 @@ export class TodoList {
         let task = this.todoMap.get(id);
         if(task) {
             task.checked = check;
-            $.ajax({
-                type: 'PUT',
-                url: todosUrl + id,
-                contentType: 'application/json',
-                data: JSON.stringify(task),
-                success: (todo) => {
-                                    this.todoMap.set(id, todo);
-                                    if(!skipRender)
-                                        this.render();
-                                }
+            this.updateTask(task, (todo) => {
+                this.todoMap.set(id, todo);
+                if(!skipRender)
+                    this.render();
             });
             
         }
+    }
+
+    updateTask(task, success) {
+        $.ajax({
+            type: 'PUT',
+            url: todosUrl + task.id,
+            contentType: 'application/json',
+            data: JSON.stringify({ text: task.text, checked: task.checked }),
+            success: success
+        });
     }
 
     selectDeselectAll() {
