@@ -3,7 +3,7 @@ const uuidv4 = require('uuid/v4');
 const Joi = require('@hapi/joi');
 
 const postSchema = Joi.object().keys({ 
-    text: Joi.string().alphanum().min(3).max(30).required(),
+    text: Joi.string().min(3).max(30).required(),
     checked: Joi.boolean().required()
 });
 
