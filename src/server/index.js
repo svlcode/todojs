@@ -2,6 +2,7 @@ const express = require('express');
 const uuidv4 = require('uuid/v4');
 const logger = require("./logger.js");
 const validator = require("./validator");
+const config = require('config');
 
 const app = express();
 
@@ -14,12 +15,19 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use(logger);
+// Config
+const port = config.get('port');
+console.log(`Application Name: ${config.get('name')}`);
+
+let environment = app.get('env');
+console.log(`Environment: ${environment}`);
+
+if(environment === 'development') {
+    app.use(logger);
+}
+
 app.use(validator);
-
-
-
-const port = 3000;
+ 
 
 let todos = [
     { id: uuidv4() + "", text : 'my first todo', checked: false },
