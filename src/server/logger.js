@@ -1,6 +1,7 @@
+const requestDebugger = require('debug')('app:requests');
+
 function log(req, res, next) {
-    console.log(`Handling '${req.method}' request on '${req.url}'...`);
-    
+    requestDebugger(`Handling '${req.method}' request on '${req.url}'...`);
     next();
 }
 

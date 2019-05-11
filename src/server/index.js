@@ -1,3 +1,4 @@
+const startupDebugger = require('debug')('app:startup');
 const express = require('express');
 const uuidv4 = require('uuid/v4');
 const logger = require("./logger.js");
@@ -17,10 +18,10 @@ app.use((req, res, next) => {
 
 // Config
 const port = config.get('port');
-console.log(`Application Name: ${config.get('name')}`);
+startupDebugger(`Application Name: ${config.get('name')}`);
 
 let environment = app.get('env');
-console.log(`Environment: ${environment}`);
+startupDebugger(`Environment: ${environment}`);
 
 if(environment === 'development') {
     app.use(logger);
@@ -100,5 +101,5 @@ app.put("/api/todos/:id", (req, res) => {
 
 
 app.listen(port, () => {
-    console.log('listening on port: ' + port);
+    startupDebugger('listening on port: ' + port);
 });
